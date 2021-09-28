@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Личный кабинет
+{% endblock title %}
+
+
+{% block content %}
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+<div class="container">
+    <div class="row">
+        <div class="auto">
+        <center>
+            <h2>Личный кабинет {{ name }}</h2>
+            {% for object in objects_text %}
+            <h1>{{ object.text }}</h1> <!--для отображения записи текста из приложения my_notes-->
+            {% endfor %}
+        </center>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}
