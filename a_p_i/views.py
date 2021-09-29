@@ -5,14 +5,14 @@ from rest_framework.response import Response
 from rest_framework import status
 
 
-@api_view(['GET', 'POST',])
-def my_notes_list(request):
+@api_view(['GET', 'POST'])
+def my_notes_list(request, format=None):
     if request.method == 'GET':
         notes = MyNotes.objects.all()
         serializer = NoteSerializer(notes, many=True)
         return Response(serializer.data)
     elif request.method == 'POST':
-        serializer = NoteSerializer(request.data)
+        serializer = NoteSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -20,9 +20,9 @@ def my_notes_list(request):
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
-def my_notes_list(request):
+def my_notes_list_detail(request, pk, format=None):
     try:
-        note = MyNotes.objects.get(id=id)
+        note = MyNotes.objects.get(pk=pk)
     except MyNotes.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
     if request.method == 'GET':

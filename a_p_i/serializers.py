@@ -2,9 +2,9 @@ from rest_framework.serializers import (IntegerField, CharField, Serializer, Mod
 from my_notes.models import MyNotes
 
 
-class NoteSerializer(Serializer):
+class NoteSerializer(ModelSerializer):
     class Meta:
-        moel = MyNotes
+        model = MyNotes
         fields = '__all__'
 
 
