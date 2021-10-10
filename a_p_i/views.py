@@ -1,9 +1,11 @@
 from rest_framework.decorators import api_view
+
+
 from my_notes.models import MyNotes
 from a_p_i.serializers import NoteSerializer #ThinNoteSerializer # ThinNoteSerializer - если нужно отобразить не все а только нужные поля
 from rest_framework.response import Response
 from rest_framework import status
-
+from rest_framework.permissions import IsAuthenticated  # урок 26 (права доступа) без авторизации невозможно постить и смотреть - http://127.0.0.1:8000/api/my_notes_list/ - будет надпись "detail": "Authentication credentials were not provided."
 
 # ----------------lesson 20,21-------на основе миксинов-------------------
 
@@ -14,13 +16,19 @@ from rest_framework.generics import GenericAPIView
 class My_Notes_List_Mixin(ListModelMixin, CreateModelMixin, GenericAPIView):
     queryset = MyNotes.objects.all()
     serializer_class = NoteSerializer
-
+# в уроке 27 расказано об правах подробно - являешся автором записи - можешь удалить если ты не автор - то удалять запись нет прав.
+    permission_classes = (IsAuthenticated,) # урок 26 (права доступа) без авторизации невозможно постить и смотреть - http://127.0.0.1:8000/api/my_notes_list/  - будет надпись "detail": "Authentication credentials were not provided."
+                                            # insomnia тоже покажет "detail": "Invalid username/password."
     def get(self, request, *args, **kwargs):
         self.serializer_class = NoteSerializer
         return self.list(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
+
+    def perform_create(self, serializer): # видео 24
+        serializer.save(author=self.request.user) #обращаемся к записи в самом запросе к серверу
+        #в request прописан авторизованный user, который обращается к серверу по умолчанию прописанный в в request
 
 
 class My_Notes_Detail_Mixin(RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin, GenericAPIView):
@@ -37,8 +45,22 @@ class My_Notes_Detail_Mixin(RetrieveModelMixin, UpdateModelMixin, DestroyModelMi
         return self.destroy(request, *args, **kwargs)
 
 
+# ---------------урок 28---------------------делаем сериалайзер для возможности добавления юзеров по API-------------
+from a_p_i.serializers import UserSerializer
+from rest_framework.viewsets import ModelViewSet, ViewSetMixin
+from django.contrib.auth import get_user_model
+from rest_framework.permissions import IsAdminUser
 
-# ----------------lesson 18--- -----------------------
+class UserViewSet(ModelViewSet):
+    model = get_user_model()  # функция которая возвращает модель текущего юзера
+    queryset = model.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = (IsAdminUser,)
+#после создания данного класса отображения переходим в a_p_i/urls.py и прописываем адрес для перехода к данному API
+# -----------------------------------------------------------------------------------------------------------------
+
+
+#---------------lesson 18--- -----------------------
 '''
 from rest_framework.views import APIView
 
