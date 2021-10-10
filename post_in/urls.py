@@ -17,6 +17,8 @@ from django.contrib import admin
 from django.urls import path, include
 from account.views import dashboard
 
+# ----для URL для получения "access" и "refresh" TOKEN-ов---------
+from rest_framework_simplejwt.views import (TokenObtainPairView,TokenRefreshView,)
 
 urlpatterns = [
     path('', dashboard, name='dashboard'),
@@ -24,4 +26,9 @@ urlpatterns = [
     path('account/', include(('account.urls', 'account'))),
     path('api/', include(('a_p_i.urls', 'a_p_i'))),
     path('api-auth/', include(('rest_framework.urls', 'rest_framework'))), #урок 25 - (приложение не свалиться если пользователь не авторизован)
+
+#----урок 31 ---аутентификация с помощью JWT Tokena (pip.....djangorestframework-simplejwt 4.8.0)---------------
+    # ----URL для получения "access" и "refresh" TOKEN-ов---------
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
