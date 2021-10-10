@@ -33,10 +33,10 @@ def user_registration_view(request):
     if request.method == 'POST':
         form1 = UserRegistrationForm(request.POST)
         if form1.is_valid():
-            new_user = form1.save(commit=False)
-            new_user.set_password(form1.cleaned_data['password'])
-            new_user.save()
-            return render(request, 'account/register_done.html', {'new_user': new_user})
+            user = form1.save(commit=False)
+            user.set_password(form1.cleaned_data['password'])
+            user.save()
+            return render(request, 'account/register_done.html', {'user': user})
 
         return render(request, 'account/register.html', {'form1': form1})
 
