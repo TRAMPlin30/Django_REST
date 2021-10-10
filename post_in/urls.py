@@ -22,4 +22,6 @@ urlpatterns = [
     path('', dashboard, name='dashboard'),
     path('admin/', admin.site.urls),
     path('account/', include(('account.urls', 'account'))),
+    path('api/', include(('a_p_i.urls', 'a_p_i'))),
+    path('api-auth/', include(('rest_framework.urls', 'rest_framework'))), #урок 25 - (приложение не свалиться если пользователь не авторизован)
 ]
