@@ -49,7 +49,8 @@ def user_registration_view(request):
 def dashboard(request):
     if request.user.is_authenticated:
         name = request.user
-        objects_text = MyNotes.objects.all() #для отображения записи текста из приложения my_notes
+        objects_text = MyNotes.objects.filter(author=name) #для отображения записи текста из приложения my_notes,
+                                       #которую создал именно тот пользователь который залогинен
 
         context = {'name': name, 'objects_text': objects_text}
         return render(request, 'account/dashboard.html', context)
